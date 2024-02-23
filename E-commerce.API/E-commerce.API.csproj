@@ -33,4 +33,8 @@
     <ProjectReference Include="..\E-commerceWebsite\E-commerceWebsite.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>
