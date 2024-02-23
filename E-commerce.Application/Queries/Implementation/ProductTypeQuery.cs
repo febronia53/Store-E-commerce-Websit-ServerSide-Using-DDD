@@ -1,4 +1,5 @@
 ﻿using E_commerce.Application.Queries.Interfaces;
+using E_commerceWebsite.AggregateModels.IRepositories;
 using E_commerceWebsite.AggregateModels.ProductAggregate;
 using System;
 using System.Collections.Generic;

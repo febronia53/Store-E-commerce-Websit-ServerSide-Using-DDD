@@ -1,12 +1,12 @@
 using E_commerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
-using E_commerceWebsite.AggregateModels.ProductAggregate;
 using E_commerce.Infrastructure.Data.Repositories;
 using System.Reflection;
 using E_commerce.Application.Queries;
 using E_commerce.Application.Queries.Implementation;
 using E_commerce.Application.Queries.Interfaces;
+using E_commerceWebsite.AggregateModels.IRepositories;
 namespace E_commerce.API
 {
     public class Program

@@ -1,12 +1,13 @@
 ﻿using E_commerce.Application.Queries.Interfaces;
+using E_commerceWebsite.AggregateModels.IRepositories;
 using E_commerceWebsite.AggregateModels.ProductAggregate;
 using MediatR;
 using System.Collections.Generic;
 
 namespace E_commerce.Application.Queries.Implementation
 {
-  
-        public class ProductQuery : IProductQuery
+
+    public class ProductQuery : IProductQuery
         {
             private readonly IProductRepository _productRepository;
 
