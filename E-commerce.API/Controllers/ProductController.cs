@@ -1,4 +1,6 @@
-﻿using E_commerce.Application.Queries.Interfaces;
+﻿using AutoMapper;
+using E_commerce.API.Dtos;
+using E_commerce.Application.Queries.Interfaces;
 using E_commerceWebsite.AggregateModels.ProductAggregate;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +16,12 @@ namespace E_commerce.API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IProductQuery _productQuery;
-
-        public ProductController(IMediator mediator, IProductQuery productQuery)
+        private readonly IMapper _mapper;
+        public ProductController(IMediator mediator, IProductQuery productQuery, IMapper mapper)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _productQuery = productQuery ?? throw new ArgumentNullException(nameof(productQuery));
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -27,7 +30,8 @@ namespace E_commerce.API.Controllers
             try
             {
                 var products = await _productQuery.GetProducts();
-                return Ok(products);
+                var productDtos = _mapper.Map<IEnumerable<ProductToReturnDto>>(products);
+                return Ok(productDtos);
             }
             catch (Exception ex)
             {
@@ -47,7 +51,8 @@ namespace E_commerce.API.Controllers
                     return NotFound($"Product with ID: {id} not found.");
                 }
 
-                return Ok(product);
+                var productDto = _mapper.Map<ProductToReturnDto>(product);
+                return Ok(productDto);
             }
             catch (Exception ex)
             {
@@ -67,7 +72,8 @@ namespace E_commerce.API.Controllers
                     return NotFound($"Product with name: {productName} not found.");
                 }
 
-                return Ok(product);
+                var productDto = _mapper.Map<ProductToReturnDto>(product);
+                return Ok(productDto);
             }
             catch (Exception ex)
             {

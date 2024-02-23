@@ -37,6 +37,7 @@ namespace E_commerce.API
             builder.Services.AddScoped<IProductTypeQuery, ProductTypeQuery>();
             builder.Services.AddScoped<IProductBrandRepository, ProductBrandRepository>();
             builder.Services.AddScoped<IProductBrandQuery, ProductBrandQuery>();
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             var app = builder.Build();
 
