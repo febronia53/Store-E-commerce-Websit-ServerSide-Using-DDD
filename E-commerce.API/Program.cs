@@ -7,6 +7,7 @@ using E_commerce.Application.Queries;
 using E_commerce.Application.Queries.Implementation;
 using E_commerce.Application.Queries.Interfaces;
 using E_commerceWebsite.AggregateModels.IRepositories;
+using E_commerce.API.Middleware;
 namespace E_commerce.API
 {
     public class Program
@@ -64,6 +65,8 @@ namespace E_commerce.API
 
 
             }
+
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
