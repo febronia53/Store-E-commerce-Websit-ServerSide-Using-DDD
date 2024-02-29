@@ -9,13 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "E-commerce.Domain", "E-comm
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "E-commerce.Infrastructure", "E-commerce.Infrastructure", "{177F2DD8-48F7-4480-85E9-4DD3DF6F2344}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-commerce.API", "E-commerce.API\E-commerce.API.csproj", "{C979F898-79B0-4724-A5ED-A08E60E3744A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-commerce.API", "E-commerce.API\E-commerce.API.csproj", "{C979F898-79B0-4724-A5ED-A08E60E3744A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-commerceWebsite", "E-commerceWebsite\E-commerceWebsite.csproj", "{F1D5A29B-34AE-47C3-B4BE-B5F17BF558F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-commerceWebsite.Domain", "E-commerceWebsite\E-commerceWebsite.Domain.csproj", "{F1D5A29B-34AE-47C3-B4BE-B5F17BF558F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-commerce.Infrastructure.Data", "E-commerce.Infrastructure.Data\E-commerce.Infrastructure.Data.csproj", "{AE78D878-2407-4D7A-AF2A-B5DB24C06626}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-commerce.Infrastructure.Data", "E-commerce.Infrastructure.Data\E-commerce.Infrastructure.Data.csproj", "{AE78D878-2407-4D7A-AF2A-B5DB24C06626}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E-commerce.Application", "E-commerce.Application\E-commerce.Application.csproj", "{B11613ED-20DA-4E16-99EF-005AB0FFBC19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E-commerce.Application", "E-commerce.Application\E-commerce.Application.csproj", "{B11613ED-20DA-4E16-99EF-005AB0FFBC19}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

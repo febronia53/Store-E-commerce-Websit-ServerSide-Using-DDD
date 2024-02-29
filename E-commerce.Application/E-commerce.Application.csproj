@@ -11,7 +11,6 @@
     <Folder Include="Commands\" />
     <Folder Include="CommandsHandler\" />
     <Folder Include="Validation\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,7 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\E-commerce.Infrastructure.Data\E-commerce.Infrastructure.Data.csproj" />
-    <ProjectReference Include="..\E-commerceWebsite\E-commerceWebsite.csproj" />
+    <ProjectReference Include="..\E-commerceWebsite\E-commerceWebsite.Domain.csproj" />
   </ItemGroup>
 
 </Project>
