@@ -194,6 +194,33 @@ namespace E_commerce.API.Controllers
                 return StatusCode(500, $"Internal server error from Product Controller: {ex.Message}");
             }
         }
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> SearchProducts([FromQuery] string searchTerm)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(searchTerm))
+                {
+                    return BadRequest("Search term cannot be empty.");
+                }
+
+                var searchResults = await _productQuery.SearchProducts(searchTerm);
+
+                if (searchResults == null || !searchResults.Any())
+                {
+                    return NotFound($"No products found for the search term: {searchTerm}");
+                }
+
+                var searchDtos = _mapper.Map<IEnumerable<ProductToReturnDto>>(searchResults);
+                return Ok(searchDtos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error from Product Controller: {ex.Message}");
+            }
+        }
+
     }
 }
 
