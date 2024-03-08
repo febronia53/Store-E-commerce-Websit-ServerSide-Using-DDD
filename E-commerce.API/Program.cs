@@ -39,14 +39,8 @@ namespace E_commerce.API
             builder.Services.AddScoped<IProductBrandRepository, ProductBrandRepository>();
             builder.Services.AddScoped<IProductBrandQuery, ProductBrandQuery>();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            builder.Services.AddCors(opt=>
-            {
-                opt.AddPolicy("CorsPolicy", policy =>
-                {
-                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
-                });
-            }
-                );
+            builder.Services.AddCors();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -77,8 +71,11 @@ namespace E_commerce.API
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            // prefered to add cors middleware before authorization 
+            app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200/"));
+
             app.UseAuthorization();
-            app.UseCors("CorsPolicy");
             app.MapControllers();
 
             app.Run();
