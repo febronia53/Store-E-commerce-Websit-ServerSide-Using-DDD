@@ -98,11 +98,11 @@
 
 
 
-
-
 using AutoMapper;
 using E_commerce.API.Dtos;
+using E_commerce.Application.Commands;
 using E_commerce.Application.Queries.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -115,11 +115,14 @@ namespace E_commerce.API.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
+        private readonly IMediator _mediator;
+
         private readonly IProductQuery _productQuery;
         private readonly IMapper _mapper;
 
-        public ProductController(IProductQuery productQuery, IMapper mapper)
+        public ProductController(IMediator mediator, IProductQuery productQuery, IMapper mapper)
         {
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _productQuery = productQuery ?? throw new ArgumentNullException(nameof(productQuery));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
@@ -221,6 +224,74 @@ namespace E_commerce.API.Controllers
             }
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            try
+            {
+                await _mediator.Send(new DeleteProductsCommand { ProductId = id });
+                return Ok("Deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error from Product Controller: {ex.Message}");
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductToReturnDto updatedProductDto)
+        {
+            try
+            {
+                // Map DTO to command
+                var command = new UpdateProductsCommand
+                {
+                    ProductId = id,
+                    UpdatedName = updatedProductDto.Name,
+                    UpdatedDescription = updatedProductDto.Description,
+                    UpdatedPrice = updatedProductDto.Price,
+                    UpdatedPictureUrl = updatedProductDto.PictureUrl,
+                    UpdatedProductTypeName=updatedProductDto.ProductType,
+                    UpdatedProductBrandName=updatedProductDto.ProductBrand
+                    
+                };
+
+                await _mediator.Send(command);
+                return Ok("Updated successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error from Product Controller: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProduct([FromBody] ProductToReturnDto newProductDto)
+        {
+            try
+            {
+                // Map DTO to command
+                var command = new AddProductsCommand
+                {
+                    Name = newProductDto.Name,
+                    Description = newProductDto.Description,
+                    Price = newProductDto.Price,
+                    PictureUrl = newProductDto.PictureUrl,
+                    ProductTypeName = newProductDto.ProductType,
+                    ProductBrandName = newProductDto.ProductBrand
+                };
+
+                // Send the command to Mediator
+                var productId = await _mediator.Send(command);
+
+                // Return the ID of the newly added product in the response
+                return CreatedAtAction(nameof(GetProductById), new { id = productId }, null);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error from Product Controller: {ex.Message}");
+            }
+        }
     }
 }
 

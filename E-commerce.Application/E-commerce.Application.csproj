@@ -8,8 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\" />
-    <Folder Include="CommandsHandler\" />
     <Folder Include="Validation\" />
   </ItemGroup>
 

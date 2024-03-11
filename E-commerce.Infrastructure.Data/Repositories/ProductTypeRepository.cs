@@ -32,6 +32,29 @@ namespace E_commerce.Infrastructure.Data.Repositories
         {
             return await _dbContext.productTypes.ToListAsync();
         }
-         
+
+
+        public async Task AddProductType(ProductType productType)
+        {
+            _dbContext.productTypes.Add(productType);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateProductType(ProductType productType)
+        {
+            _dbContext.Entry(productType).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteProductType(int id)
+        {
+            var type = await _dbContext.productTypes.FindAsync(id);
+            if (type != null)
+            {
+                _dbContext.productTypes.Remove(type);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
     }
 }

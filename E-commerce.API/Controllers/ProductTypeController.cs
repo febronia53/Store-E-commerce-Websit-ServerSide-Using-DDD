@@ -1,4 +1,8 @@
-﻿using E_commerce.Application.Queries.Interfaces;
+﻿using AutoMapper;
+using E_commerce.Application.Commands;
+using E_commerce.Application.Queries.Interfaces;
+using E_commerceWebsite.AggregateModels.ProductAggregate;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +13,16 @@ namespace E_commerce.API.Controllers
     public class ProductTypeController : ControllerBase
     {
         private readonly IProductTypeQuery _productTypeQuery;
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public ProductTypeController(IProductTypeQuery productTypeQuery)
+        public ProductTypeController(IProductTypeQuery productTypeQuery, IMediator mediator, IMapper mapper)
         {
             _productTypeQuery = productTypeQuery;
+            _mediator = mediator;
+            _mapper = mapper;
         }
+      
 
         [HttpGet]
         public async Task<IActionResult> GetAllProductTypes()
@@ -69,6 +78,48 @@ namespace E_commerce.API.Controllers
             }
 
 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProductType([FromBody] ProductType productType)
+        {
+            try
+            {
+                await _mediator.Send(new AddProductTypesCommand { ProductTypeName = productType.ProductTypeName });
+                return Ok("Type added successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error from Product Type Controller: {ex.Message}");
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateProductType(int id, [FromBody] ProductType updatedProductType)
+        {
+            try
+            {
+                await _mediator.Send(new UpdateProductTypesCommand { ProductTypeId = id, UpdatedProductTypeName = updatedProductType.ProductTypeName });
+                return Ok("Type updated successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error from Product Type Controller: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProductType(int id)
+        {
+            try
+            {
+                await _mediator.Send(new DeleteProductTypesCommand { ProductTypeId = id });
+                return Ok("Type deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error from Product Type Controller: {ex.Message}");
+            }
         }
     }
 }

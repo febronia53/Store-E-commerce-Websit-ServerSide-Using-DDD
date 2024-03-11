@@ -14,6 +14,9 @@ namespace E_commerceWebsite.AggregateModels.IRepositories
         public Task<ProductBrand> GetProductBrandById(int id);
         public Task<IReadOnlyList<ProductBrand>> GetProductBrands();
         public Task<ProductBrand> GetProductBrandByName(string name);
+        public Task AddProductBrand(ProductBrand productBrand);
+        public Task UpdateProductBrand(ProductBrand productBrand);
+        public Task DeleteProductBrand(int id);
 
     }
 }

@@ -42,5 +42,40 @@ namespace E_commerce.Infrastructure.Data.Repositories
                 .Include(P=>P.ProductBrand)
                 .ToListAsync();
         }
+
+
+        public async Task AddProduct(Product product)
+        {
+            _dbContext.products.Add(product);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteProduct(int productId)
+        {
+            var productToDelete = await _dbContext.products.FindAsync(productId);
+
+            if (productToDelete != null)
+            {
+                _dbContext.products.Remove(productToDelete);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateProduct(Product updatedProduct)
+        {
+            var existingProduct = await _dbContext.products.FindAsync(updatedProduct.Id);
+
+            if (existingProduct != null)
+            {
+                existingProduct.Name = updatedProduct.Name;
+                existingProduct.Description = updatedProduct.Description;
+                existingProduct.Price = updatedProduct.Price;
+                existingProduct.PictureUrl = updatedProduct.PictureUrl;
+                existingProduct.ProductTypeId = updatedProduct.ProductTypeId;
+                existingProduct.ProductBrandId = updatedProduct.ProductBrandId;
+
+                await _dbContext.SaveChangesAsync();
+            }
+        }
     }
 }
