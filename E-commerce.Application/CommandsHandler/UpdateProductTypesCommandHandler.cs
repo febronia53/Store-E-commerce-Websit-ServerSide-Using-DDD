@@ -1,32 +1,52 @@
-﻿using E_commerce.Application.Commands;
+﻿using AutoMapper;
+using E_commerce.Application.Commands;
 using E_commerce.Infrastructure.Data;
 using E_commerceWebsite.AggregateModels.IRepositories;
 using MediatR;
-
-public class UpdateProductTypesCommandHandler : IRequestHandler<UpdateProductTypesCommand, Unit>
+using Microsoft.EntityFrameworkCore;
+namespace E_commerce.Application.CommandsHandler
 {
-    private readonly StoreDbContext _dbContext;
-    private readonly IProductTypeRepository _productTypeRepository;
-
-    public UpdateProductTypesCommandHandler(StoreDbContext dbContext, IProductTypeRepository productTypeRepository)
+    public class UpdateProductTypesCommandHandler : IRequestHandler<UpdateProductTypesCommand, Unit>
     {
-        _dbContext = dbContext;
-        _productTypeRepository = productTypeRepository;
-    }
+        private readonly StoreDbContext _dbContext;
+        private readonly IProductTypeRepository _productTypeRepository;
 
-    public async Task<Unit> Handle(UpdateProductTypesCommand request, CancellationToken cancellationToken)
-    {
-        var existingType = await _productTypeRepository.GetProductTypeById(request.ProductTypeId);
-
-        if (existingType == null)
+        public UpdateProductTypesCommandHandler(StoreDbContext dbContext, IProductTypeRepository productTypeRepository)
         {
-            throw new InvalidOperationException($"Product type with ID '{request.ProductTypeId}' not found.");
+            _dbContext = dbContext;
+            _productTypeRepository = productTypeRepository;
         }
 
-        existingType.ProductTypeName = request.UpdatedProductTypeName;
+        public async Task<Unit> Handle(UpdateProductTypesCommand request, CancellationToken cancellationToken)
+        {
+            // Check if the product type with the updated name already exists
+            var existingType = await _productTypeRepository.GetProductTypeByName(request.UpdatedProductTypeName);
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
+            if (existingType != null && existingType.ProductTypeId != request.ProductTypeId)
+            {
+                throw new InvalidOperationException($"Product Type with the name '{request.UpdatedProductTypeName}' already exists.");
+            }
 
-        return Unit.Value;
+            // Retrieve the product type from the database using the ProductTypeId
+            var type = await _dbContext.productTypes.FindAsync(request.ProductTypeId);
+
+            // Ensure that the retrieved type is not null before updating
+            if (type != null)
+            {
+                // Optionally, check if existingType is detached and attach it to the context
+                if (_dbContext.Entry(type).State == EntityState.Detached)
+                {
+                    _dbContext.Attach(type);
+                }
+
+                // Update the ProductTypeName and save changes
+                type.ProductTypeName = request.UpdatedProductTypeName;
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
+
+            // Indicate success by returning Unit.Value (equivalent to void)
+            return Unit.Value;
+        }
     }
+
 }

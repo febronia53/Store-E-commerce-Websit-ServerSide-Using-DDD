@@ -4,58 +4,54 @@ using E_commerce.Infrastructure.Data;
 using E_commerceWebsite.AggregateModels.IRepositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-
-public class UpdateProductsCommandHandler : IRequestHandler<UpdateProductsCommand, Unit>
+namespace E_commerce.Application.CommandsHandler
 {
-    private readonly StoreDbContext _dbContext;
-    private readonly IProductRepository _productRepository;
-    private readonly IMapper _mapper;
-
-    public UpdateProductsCommandHandler(StoreDbContext dbContext, IProductRepository productRepository, IMapper mapper)
+    public class UpdateProductsCommandHandler : IRequestHandler<UpdateProductsCommand, Unit>
     {
-        _dbContext = dbContext;
-        _productRepository = productRepository;
-        _mapper = mapper;
-    }
+        private readonly StoreDbContext _dbContext;
+        private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
 
-    public async Task<Unit> Handle(UpdateProductsCommand request, CancellationToken cancellationToken)
-    {
-        // Check if a product with the updated name already exists
-        var existingProduct = await _productRepository.GetProductByName(request.UpdatedName);
-
-        if (existingProduct != null && existingProduct.Id != request.ProductId)
+        public UpdateProductsCommandHandler(StoreDbContext dbContext, IProductRepository productRepository, IMapper mapper)
         {
-            // Handle the case where a product with the updated name already exists
-            throw new InvalidOperationException($"Product with the name '{request.UpdatedName}' already exists.");
+            _dbContext = dbContext;
+            _productRepository = productRepository;
+            _mapper = mapper;
         }
 
-        var product = await _dbContext.products.FindAsync(request.ProductId);
-
-        if (product != null)
+        public async Task<Unit> Handle(UpdateProductsCommand request, CancellationToken cancellationToken)
         {
-            product.Name = request.UpdatedName;
-            product.Description = request.UpdatedDescription;
-            product.Price = request.UpdatedPrice;
-            product.PictureUrl = request.UpdatedPictureUrl;
+            var existingProduct = await _productRepository.GetProductByName(request.UpdatedName);
 
-            // Retrieve ProductType and ProductBrand by name
-            var updatedProductType = await _dbContext.productTypes.FirstOrDefaultAsync(pt => pt.ProductTypeName == request.UpdatedProductTypeName);
-            var updatedProductBrand = await _dbContext.productBrands.FirstOrDefaultAsync(pb => pb.ProductBrandName == request.UpdatedProductBrandName);
-
-            if (updatedProductType != null)
+            if (existingProduct != null && existingProduct.Id != request.ProductId)
             {
-                product.ProductTypeId = updatedProductType.ProductTypeId;
+                throw new InvalidOperationException($"Product with the name '{request.UpdatedName}' already exists.");
             }
 
-            if (updatedProductBrand != null)
+            var product = await _dbContext.products.FindAsync(request.ProductId);
+
+            if (product != null)
             {
-                product.ProductBrandId = updatedProductBrand.ProductBrandId;
+                _mapper.Map(request, product);
+
+                // Retrieve ProductType and ProductBrand by name
+                var updatedProductType = await _dbContext.productTypes.FirstOrDefaultAsync(pt => pt.ProductTypeName == request.UpdatedProductTypeName);
+                var updatedProductBrand = await _dbContext.productBrands.FirstOrDefaultAsync(pb => pb.ProductBrandName == request.UpdatedProductBrandName);
+
+                if (updatedProductType != null)
+                {
+                    product.ProductTypeId = updatedProductType.ProductTypeId;
+                }
+
+                if (updatedProductBrand != null)
+                {
+                    product.ProductBrandId = updatedProductBrand.ProductBrandId;
+                }
+
+                await _dbContext.SaveChangesAsync(cancellationToken);
             }
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            return Unit.Value;
         }
-
-        // Indicate success by returning Unit.Value (equivalent to void)
-        return Unit.Value;
     }
 }

@@ -82,7 +82,7 @@ namespace E_commerce.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProductBrand([FromBody] ProductBrand productBrand)
+        public async Task<IActionResult> AddProductBrand([FromBody] AddProductBrandsCommand productBrand)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace E_commerce.API.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProductBrand(int id, UpdateProductBrandsCommand updatedProductBrand)
+        public async Task<IActionResult> UpdateProductBrand(int id, [FromBody] UpdateProductBrandsCommand updatedProductBrand)
         {
             try
             {

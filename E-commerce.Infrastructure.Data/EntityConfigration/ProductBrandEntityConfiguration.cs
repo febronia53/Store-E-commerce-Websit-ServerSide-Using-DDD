@@ -24,8 +24,7 @@ namespace E_commerce.Infrastructure.Data.EntityConfigration
                     new ProductBrand { ProductBrandId = 6, ProductBrandName = "Adidas" },
                     new ProductBrand { ProductBrandId = 7, ProductBrandName = "Chanel" }
                 );
-            builder.Ignore(p => p.Products);
-
+           
 
         }
     }

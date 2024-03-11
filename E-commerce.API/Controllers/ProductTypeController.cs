@@ -81,7 +81,7 @@ namespace E_commerce.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProductType([FromBody] ProductType productType)
+        public async Task<IActionResult> AddProductType([FromBody] AddProductTypesCommand productType)
         {
             try
             {
@@ -93,13 +93,18 @@ namespace E_commerce.API.Controllers
                 return StatusCode(500, $"Internal server error from Product Type Controller: {ex.Message}");
             }
         }
-
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProductType(int id, [FromBody] ProductType updatedProductType)
+        public async Task<IActionResult> UpdateProductType(int id, [FromBody] UpdateProductTypesCommand updatedProductType)
         {
             try
             {
-                await _mediator.Send(new UpdateProductTypesCommand { ProductTypeId = id, UpdatedProductTypeName = updatedProductType.ProductTypeName });
+                if (_mediator == null)
+                {
+                    return StatusCode(500, "Internal server error: _mediator is null.");
+                }
+
+
+                await _mediator.Send(new UpdateProductTypesCommand { ProductTypeId = id, UpdatedProductTypeName = updatedProductType.UpdatedProductTypeName });
                 return Ok("Type updated successfully");
             }
             catch (Exception ex)
@@ -107,6 +112,7 @@ namespace E_commerce.API.Controllers
                 return StatusCode(500, $"Internal server error from Product Type Controller: {ex.Message}");
             }
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProductType(int id)

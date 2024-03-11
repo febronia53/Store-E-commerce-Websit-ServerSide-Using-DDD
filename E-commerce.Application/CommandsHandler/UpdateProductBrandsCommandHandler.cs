@@ -7,43 +7,42 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-
-public class UpdateProductBrandsCommandHandler : IRequestHandler<UpdateProductBrandsCommand, Unit>
+namespace E_commerce.Application.CommandsHandler
 {
-    private readonly StoreDbContext _dbContext;
-    private readonly IProductBrandRepository _productBrandRepository;
-    private readonly IMapper _mapper;
-
-    public UpdateProductBrandsCommandHandler(StoreDbContext dbContext, IProductBrandRepository productBrandRepository, IMapper mapper)
+    public class UpdateProductBrandsCommandHandler : IRequestHandler<UpdateProductBrandsCommand, Unit>
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-        _productBrandRepository = productBrandRepository ?? throw new ArgumentNullException(nameof(productBrandRepository));
-        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-    }
+        private readonly StoreDbContext _dbContext;
+        private readonly IProductBrandRepository _productBrandRepository;
 
-    public async Task<Unit> Handle(UpdateProductBrandsCommand request, CancellationToken cancellationToken)
-    {
-        // Check if a product brand with the updated name already exists
-        var existingProductBrand = await _productBrandRepository.GetProductBrandByName(request.UpdatedProductBrandName);
-
-        if (existingProductBrand != null && existingProductBrand.ProductBrandId != request.ProductBrandId)
+        public UpdateProductBrandsCommandHandler(StoreDbContext dbContext, IProductBrandRepository productBrandRepository)
         {
-            // Handle the case where a product brand with the updated name already exists
-            throw new InvalidOperationException($"Product brand with the name '{request.UpdatedProductBrandName}' already exists.");
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _productBrandRepository = productBrandRepository ?? throw new ArgumentNullException(nameof(productBrandRepository));
         }
 
-        var productBrand = await _dbContext.productBrands.FindAsync(request.ProductBrandId);
-
-        if (productBrand != null)
+        public async Task<Unit> Handle(UpdateProductBrandsCommand request, CancellationToken cancellationToken)
         {
-            productBrand.ProductBrandName = request.UpdatedProductBrandName;
+            // Check if a product brand with the updated name already exists
+            var existingProductBrand = await _productBrandRepository.GetProductBrandByName(request.UpdatedProductBrandName);
 
-            // Additional properties can be updated here if needed
+            if (existingProductBrand != null && existingProductBrand.ProductBrandId != request.ProductBrandId)
+            {
+                // Handle the case where a product brand with the updated name already exists
+                throw new InvalidOperationException($"Product brand with the name '{request.UpdatedProductBrandName}' already exists.");
+            }
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            var productBrand = await _dbContext.productBrands.FindAsync(request.ProductBrandId);
+
+            if (productBrand != null)
+            {
+                productBrand.ProductBrandName = request.UpdatedProductBrandName;
+
+
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
+
+            // Indicate success by returning Unit.Value (equivalent to void)
+            return Unit.Value;
         }
-
-        // Indicate success by returning Unit.Value (equivalent to void)
-        return Unit.Value;
     }
 }
