@@ -7,8 +7,12 @@ namespace E_commerceWebsite.AggregateModels.ProductAggregate
     {
         [Key]
         public int ProductBrandId { get; set; }
+
+
+        [Required(ErrorMessage = "ProductBrandName is required")]
         public string ProductBrandName { get; set; }
-        [JsonIgnore]
-        public ICollection<Product> Products { get; set; }
+        
+       // [JsonIgnore]
+       public virtual ICollection<Product> Products { get; set; }
     }
 }

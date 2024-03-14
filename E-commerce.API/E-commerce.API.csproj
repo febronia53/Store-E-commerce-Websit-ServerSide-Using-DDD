@@ -30,7 +30,11 @@
   <ItemGroup>
     <ProjectReference Include="..\E-commerce.Application\E-commerce.Application.csproj" />
     <ProjectReference Include="..\E-commerce.Infrastructure.Data\E-commerce.Infrastructure.Data.csproj" />
-    <ProjectReference Include="..\E-commerceWebsite\E-commerceWebsite.csproj" />
+    <ProjectReference Include="..\E-commerceWebsite\E-commerceWebsite.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

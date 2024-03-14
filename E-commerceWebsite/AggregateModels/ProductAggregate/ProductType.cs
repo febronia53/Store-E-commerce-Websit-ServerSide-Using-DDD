@@ -8,7 +8,7 @@ namespace E_commerceWebsite.AggregateModels.ProductAggregate
         [Key]
         public int ProductTypeId { get; set; }
         public string ProductTypeName { get; set; }
-        [JsonIgnore]
-        public ICollection<Product> Products { get; set; }
+    //    [JsonIgnore]
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

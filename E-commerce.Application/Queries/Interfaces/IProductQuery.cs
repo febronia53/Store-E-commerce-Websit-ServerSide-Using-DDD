@@ -14,5 +14,7 @@ namespace E_commerce.Application.Queries.Interfaces
         public Task<IReadOnlyList<Product>> GetProducts();
         public Task<Product> GetProductById(int id);
         public Task<Product> GetProductByName(string name);
+        Task<IReadOnlyList<Product>> SearchProducts(string searchTerm);
+
     }
 }
