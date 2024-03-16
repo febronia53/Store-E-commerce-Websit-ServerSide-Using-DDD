@@ -74,7 +74,7 @@ namespace E_commerce.API
             app.UseStaticFiles();
 
             // prefered to add cors middleware before authorization 
-            app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200/"));
+            app.UseCors(c => c.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
 
             app.UseAuthorization();
             app.MapControllers();
